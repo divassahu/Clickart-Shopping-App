@@ -1,6 +1,6 @@
 package com.clickart.service;
 
-import com.clickart.exception.LoginException; 
+import com.clickart.exception.LoginException;  
 import com.clickart.model.Login;
 
 public interface CustomerLogin {

@@ -1,6 +1,6 @@
 package com.clickart.service;
 
-import java.time.LocalDate; 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +18,7 @@ import com.clickart.repository.OrderRepo;
 public class OrderServiceImpl implements OrderService{
 	
 	@Autowired
-	private OrderRepo or;
+	private OrderRepo orderRepo;
 	
 	@Autowired
 	private CartRepo cartRepo;
@@ -32,12 +32,12 @@ public class OrderServiceImpl implements OrderService{
 		}
 		order.setCart(car.get());
 		order.setCustomer(car.get().getCustomer());
-		return or.save(order);
+		return orderRepo.save(order);
 	}
 
 	@Override
 	public Order viewOrder(int orderId) throws OrderException {
-		Optional<Order>ord=or.findById(orderId);
+		Optional<Order>ord=orderRepo.findById(orderId);
 		if(ord.isEmpty()) {
 			throw new OrderException("order not found with id "+orderId);
 		}
@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
 	public List<Order> viewOrdersByDate(LocalDate startDate, LocalDate endDate) throws OrderException {
-		List<Order>list=or.orderBetweenDate(startDate, endDate);
+		List<Order>list=orderRepo.orderBetweenDate(startDate, endDate);
 		if(list.size()==0)
 			throw new OrderException("no order found between "+startDate+" and "+endDate);
 		return list;
@@ -54,7 +54,7 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
 	public Order updateOrderStatus(int orderId, String status) throws OrderException {
-		Optional<Order>ord=or.findById(orderId);
+		Optional<Order>ord=orderRepo.findById(orderId);
 		if(ord.isEmpty()) {
 			throw new OrderException("order not found with id "+orderId);
 		}
@@ -64,14 +64,14 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
 	public Order deleteOrder(int orderId) throws OrderException {
-		Optional<Order>ord=or.findById(orderId);
+		Optional<Order>ord=orderRepo.findById(orderId);
 		if(ord.isEmpty()) {
 			throw new OrderException("order not found with id "+orderId);
 		}
 		Order order=ord.get();
 		order.setCustomer(null);
 		order.setCart(null);
-		or.delete(ord.get());
+		orderRepo.delete(ord.get());
 		return ord.get();
 	}
 

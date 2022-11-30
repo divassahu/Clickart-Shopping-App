@@ -1,6 +1,6 @@
 package com.clickart.controller;
 
-import java.util.List; 
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,23 +22,23 @@ import com.clickart.service.AdminService;
 public class AdminController {
 	
 	@Autowired
-	private AdminService as;
+	private AdminService adminService;
 	
 	@PostMapping("/register")
 	public ResponseEntity<Admin> registerAdmin(@RequestBody Admin admin, @RequestParam(required = true) String validationKey)throws AdminException{
-		Admin ad=as.registerAdmin(admin, validationKey);
+		Admin ad=adminService.registerAdmin(admin, validationKey);
 		return new ResponseEntity<Admin>(ad,HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping("/viewAllAdmin")
 	public ResponseEntity<List<Admin>> viewAllAdmin(String key)throws AdminException{
-		List<Admin>list=as.viewAllAdmin(key);
+		List<Admin>list=adminService.viewAllAdmin(key);
 		return new ResponseEntity<List<Admin>>(list,HttpStatus.ACCEPTED);
 	}
 	
 	@DeleteMapping("/deleteAdmin")
 	public ResponseEntity<Admin> deleteAdmin(Admin admin, String key)throws AdminException{
-		Admin ad=as.deleteAdmin(admin, key);
+		Admin ad=adminService.deleteAdmin(admin, key);
 		return new ResponseEntity<Admin>(ad,HttpStatus.ACCEPTED);
 	}
 

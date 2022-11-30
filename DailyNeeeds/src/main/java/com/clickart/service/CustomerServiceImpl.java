@@ -1,6 +1,6 @@
 package com.clickart.service;
 
-import java.util.List; 
+import java.util.List;  
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +19,21 @@ import com.clickart.repository.UserSessionRepo;
 public class CustomerServiceImpl implements CustomerService{
 	
 	@Autowired
-	private CustomerRepo cr;
+	private CustomerRepo customerRepo;
 	
 	@Autowired
-	private UserSessionRepo usRepo;
+	private UserSessionRepo userSessionRepo;
 	
 	@Autowired
-	private CartRepo cartR;
+	private CartRepo cartRepo;
 
 	@Override
 	public Customer registerCustomer(Customer customer) throws CustomerException {
 		
-		Customer saved=cr.save(customer);
+		Customer saved=customerRepo.save(customer);
 		Cart cart=new Cart();
 		cart.setCustomer(saved);
-		cartR.save(cart);
+		cartRepo.save(cart);
 		customer.setCart(cart);
 		return saved;
 		
@@ -41,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService{
 
 	@Override
 	public Customer viewCustomer(int customerId) throws CustomerException {
-		Optional<Customer> c=cr.findById(customerId);
+		Optional<Customer> c=customerRepo.findById(customerId);
 		
 		if(c.isPresent()) {
 			return c.get();
@@ -51,33 +51,33 @@ public class CustomerServiceImpl implements CustomerService{
 
 	@Override
 	public Customer updateCustomer(Customer customer, String key) throws CustomerException {
-		List<CurrentUserSession> extCu=usRepo.findByUuid(key);
+		List<CurrentUserSession> extCu=userSessionRepo.findByUuid(key);
 		if(extCu.size()==0)
 			throw new CustomerException("key is not valid");
 		
 		if(extCu.get(0).getUserId()!=customer.getCustomerId())
 			throw new CustomerException("invalid customer detail, please login first");
 		
-		Optional<Customer> c=cr.findById(customer.getCustomerId());
+		Optional<Customer> c=customerRepo.findById(customer.getCustomerId());
 		if(c.isPresent()) {
-			return cr.save(customer);
+			return customerRepo.save(customer);
 		}
 		throw new CustomerException("user not found with id : "+customer.getCustomerId());
 	}
 
 	@Override
 	public Customer deleteCustomer(int customerId, String key) throws CustomerException {
-		List<CurrentUserSession> extCu=usRepo.findByUuid(key);
+		List<CurrentUserSession> extCu=userSessionRepo.findByUuid(key);
 		if(extCu.size()==0)
 			throw new CustomerException("key is not valid");
 		
 		if(extCu.get(0).getUserId()!=customerId)
-			throw new CustomerException("invalid customer id please fill valid id");
+			throw new CustomerException("invalid customer id, please fill valid id");
 		
 		
-		Optional<Customer> c=cr.findById(customerId);
+		Optional<Customer> c=customerRepo.findById(customerId);
 		if(c.isPresent()) {
-			cr.delete(c.get());
+			customerRepo.delete(c.get());
 			return c.get();
 		}
 		throw new CustomerException("user not found with id : "+customerId);
@@ -85,14 +85,14 @@ public class CustomerServiceImpl implements CustomerService{
 
 	@Override
 	public List<Order> viewOrders(int customerId, String key) throws CustomerException {
-		List<CurrentUserSession> extCu=usRepo.findByUuid(key);
+		List<CurrentUserSession> extCu=userSessionRepo.findByUuid(key);
 		if(extCu.size()==0)
 			throw new CustomerException("key is not valid");
 		
 		if(extCu.get(0).getUserId()!=customerId)
-			throw new CustomerException("invalid customer id please fill valid id");
+			throw new CustomerException("invalid customer id, please fill valid id");
 		
-		Optional<Customer> c=cr.findById(customerId);
+		Optional<Customer> c=customerRepo.findById(customerId);
 		if(c.isPresent()) {
 			List<Order>list=c.get().getOrders();
 			if(list.size()==0) {

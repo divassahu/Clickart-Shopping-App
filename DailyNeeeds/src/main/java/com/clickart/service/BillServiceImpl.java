@@ -1,6 +1,6 @@
 package com.clickart.service;
 
-import java.time.LocalDate; 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,26 +18,26 @@ import com.clickart.repository.OrderRepo;
 public class BillServiceImpl implements BillService{
 	
 	@Autowired
-	private BillRepo br;
+	private BillRepo billRepo;
 	
 	@Autowired
-	private OrderRepo ordeRepo;
+	private OrderRepo orderRepo;
 
 	@Override
 	public Bill addBill(Bill bill, int orderId) throws BillException, OrderException {
-		Optional<Order> ord=ordeRepo.findById(orderId);
+		Optional<Order> ord=orderRepo.findById(orderId);
 		if(ord.isEmpty())
 			throw new OrderException("order not found with id "+orderId);
 		
 		bill.setOrder(ord.get());
 		bill.setTotalPrice(ord.get().getCart().getTotalPrice());
 		bill.setTotalItem(ord.get().getCart().getTotalItems());
-		return br.save(bill);
+		return billRepo.save(bill);
 	}
 
 	@Override
 	public Bill viewBill(int billId) throws BillException {
-		Optional<Bill>bil=br.findById(billId);
+		Optional<Bill>bil=billRepo.findById(billId);
 		if(bil.isEmpty())
 			throw new BillException("bill not found with id "+billId);
 		
@@ -46,7 +46,7 @@ public class BillServiceImpl implements BillService{
 
 	@Override
 	public List<Bill> viewBills(LocalDate startDate, LocalDate endDate) throws BillException {
-		List<Bill> list=br.billBetweenDate(startDate, endDate);
+		List<Bill> list=billRepo.billBetweenDate(startDate, endDate);
 		if(list.size()==0)
 			throw new BillException("bill not found between "+startDate+" and "+endDate);
 		return list;
@@ -59,12 +59,12 @@ public class BillServiceImpl implements BillService{
 
 	@Override
 	public Bill removeBill(int billId) throws BillException {
-		Optional<Bill>bil=br.findById(billId);
+		Optional<Bill>bil=billRepo.findById(billId);
 		if(bil.isEmpty())
 			throw new BillException("bill not found with id "+billId);
 		Bill b=bil.get();
 		b.setOrder(null);
-		br.delete(b);
+		billRepo.delete(b);
 		return b;
 	}
 

@@ -1,6 +1,6 @@
 package com.clickart.controller;
 
-import java.util.List; 
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -27,35 +27,35 @@ import com.clickart.service.CustomerService;
 public class CustomerController {
 	
 	@Autowired
-	private CustomerService cs;
+	private CustomerService customerService;
 	
 	@PostMapping("/register")
 	public ResponseEntity<Customer> registerCustomer(@Valid @RequestBody Customer customer) throws CustomerException {
-		Customer c=cs.registerCustomer(customer);
+		Customer c=customerService.registerCustomer(customer);
 		return new ResponseEntity<Customer>(c,HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping("/view/{id}")
 	public ResponseEntity<Customer> viewCustomer(@PathVariable("id") int customerId) throws CustomerException {
-		Customer c=cs.viewCustomer(customerId);
+		Customer c=customerService.viewCustomer(customerId);
 		return new ResponseEntity<Customer>(c,HttpStatus.ACCEPTED);
 	}
 	
 	@PutMapping("/update")
 	public ResponseEntity<Customer> updateCustomer(@RequestBody Customer customer, @RequestParam(required = false) String key ) throws CustomerException {
-		Customer c=cs.updateCustomer(customer, key);
+		Customer c=customerService.updateCustomer(customer, key);
 		return new ResponseEntity<Customer>(c,HttpStatus.ACCEPTED);
 	}
 	
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Customer> deleteCustomer(@PathVariable("id") int customerId, @RequestParam(required = false) String key) throws CustomerException {
-		Customer c=cs.deleteCustomer(customerId, key);
+		Customer c=customerService.deleteCustomer(customerId, key);
 		return new ResponseEntity<Customer>(c,HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping("/viewOrders/{id}")
 	public ResponseEntity<List<Order>> viewOrders(@PathVariable("id") int customerId, @RequestParam(required = false) String key) throws CustomerException {
-		List<Order>list=cs.viewOrders(customerId, key);
+		List<Order>list=customerService.viewOrders(customerId, key);
 		return new ResponseEntity<List<Order>>(list,HttpStatus.ACCEPTED);
 	}
 

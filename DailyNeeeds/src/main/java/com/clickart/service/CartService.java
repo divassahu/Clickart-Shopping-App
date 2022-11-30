@@ -1,6 +1,6 @@
 package com.clickart.service;
 
-import com.clickart.exception.CartException; 
+import com.clickart.exception.CartException;  
 import com.clickart.exception.CustomerException;
 import com.clickart.exception.ProductException;
 import com.clickart.model.Cart;

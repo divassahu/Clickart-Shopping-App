@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import com.shopy.dto.ExceptionDTO;
+import com.clickart.dto.ExceptionDTO;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -110,9 +110,6 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<ExceptionDTO>(err, HttpStatus.BAD_REQUEST);
 		
 	}
-	
-	
-//	==========================================================================
 	
 	
 	

@@ -1,6 +1,6 @@
 package com.clickart.service;
 
-import java.util.List; 
+import java.util.List;
 
 import com.clickart.exception.AdminException;
 import com.clickart.model.Admin;

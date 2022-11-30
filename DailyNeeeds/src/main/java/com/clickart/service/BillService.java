@@ -1,6 +1,6 @@
 package com.clickart.service;
 
-import java.time.LocalDate; 
+import java.time.LocalDate;
 import java.util.List;
 
 

@@ -1,6 +1,6 @@
 package com.clickart.service;
 
-import java.util.List; 
+import java.util.List;  
 
 import com.clickart.exception.CategoryException;
 import com.clickart.model.Category;

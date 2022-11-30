@@ -1,13 +1,12 @@
 package com.clickart.service;
 
-import java.util.List; 
+import java.util.List;  
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.clickart.exception.CategoryException;
-import com.clickart.exception.ProductException;
 import com.clickart.model.Category;
 import com.clickart.model.CurrentAdminSession;
 import com.clickart.model.Product;
@@ -18,31 +17,31 @@ import com.clickart.repository.CategoryRepo;
 public class CategoryServiceImpl implements CategoryService{
 	
 	@Autowired
-	private CategoryRepo cr;
+	private CategoryRepo categoryRepo;
 	
 	@Autowired
-	private AdminSessionRepo adsrepo;
+	private AdminSessionRepo adminSessionRepo;
 
 	@Override
 	public Category addCategory(Category category, String key) throws CategoryException {
 
-		List<CurrentAdminSession> list=adsrepo.findByUuid(key);
+		List<CurrentAdminSession> list=adminSessionRepo.findByUuid(key);
 		
 		if(list.size()==0)
-			throw new CategoryException("you don't have authority to add category");
+			throw new CategoryException("you are not authorised to add category");
 		
-		List<Category> cat=cr.findByName(category.getName());
+		List<Category> cat=categoryRepo.findByName(category.getName());
 		
 		if(cat.size()!=0) {
 			throw new CategoryException("category already registered with this name id is "+cat.get(0).getCategoryId());
 		}
 		
-		return cr.save(category);
+		return categoryRepo.save(category);
 	}
 
 	@Override
 	public Category viewCategory(int categoryId) throws CategoryException {
-		Optional<Category> c=cr.findById(categoryId);
+		Optional<Category> c=categoryRepo.findById(categoryId);
 		if(c.isPresent()) {
 			return c.get();
 		}
@@ -52,14 +51,14 @@ public class CategoryServiceImpl implements CategoryService{
 	@Override
 	public Category deleteCategory(int categoryId, String key) throws CategoryException {
 
-		List<CurrentAdminSession> list=adsrepo.findByUuid(key);
+		List<CurrentAdminSession> list=adminSessionRepo.findByUuid(key);
 		
 		if(list.size()==0)
-			throw new CategoryException("you don't have authority to delete category");
+			throw new CategoryException("you are not authorised to delete category");
 		
-		Optional<Category> c=cr.findById(categoryId);
+		Optional<Category> c=categoryRepo.findById(categoryId);
 		if(c.isPresent()) {
-			cr.delete(c.get());
+			categoryRepo.delete(c.get());
 			return c.get();
 		}
 		throw new CategoryException("category not found with id "+categoryId);
@@ -67,16 +66,16 @@ public class CategoryServiceImpl implements CategoryService{
 
 	@Override
 	public List<Category> allCategory() throws CategoryException {
-		List<Category>list=cr.findAll();
+		List<Category>list=categoryRepo.findAll();
 		if(list.size()==0) {
-			throw new CategoryException("list empty");
+			throw new CategoryException("empty list");
 		}
 		return list;
 	}
 
 	@Override
 	public List<Product> productByCategory(int categoryId) throws CategoryException {
-		Optional<Category> c=cr.findById(categoryId);
+		Optional<Category> c=categoryRepo.findById(categoryId);
 		if(c.isPresent()) {
 			return c.get().getProducts();
 		}

@@ -1,11 +1,11 @@
 package com.clickart.repository;
 
-import java.util.List;
+import java.util.List; 
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.shopy.model.Category;
+import com.clickart.model.Category;
 
 @Repository
 public interface CategoryRepo extends JpaRepository<Category, Integer>{

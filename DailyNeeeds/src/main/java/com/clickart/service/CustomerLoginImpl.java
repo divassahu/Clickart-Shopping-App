@@ -1,6 +1,6 @@
 package com.clickart.service;
 
-import java.time.LocalDateTime; 
+import java.time.LocalDateTime;  
 import java.util.List;
 import java.util.Optional;
 
@@ -20,24 +20,24 @@ import net.bytebuddy.utility.RandomString;
 public class CustomerLoginImpl implements CustomerLogin{
 
 	@Autowired
-	private UserSessionRepo usr;
+	private UserSessionRepo userSessionRepo;
 	
 	@Autowired
-	private CustomerRepo crl;
+	private CustomerRepo customerRepo;
 	
 	@Override
 	public String logIntoAccount(Login dto) throws LoginException {
-		List<Customer> list=crl.findByMobile(dto.getMobile());
+		List<Customer> list=customerRepo.findByMobile(dto.getMobile());
 		
 		if(list.size()==0) {
-			throw new LoginException("please enter valid mobil number");
+			throw new LoginException("please enter valid mobile number");
 		}
 		
 		Customer customer=list.get(0);
-		Optional<CurrentUserSession> validation=usr.findById(customer.getCustomerId());
+		Optional<CurrentUserSession> validation=userSessionRepo.findById(customer.getCustomerId());
 		
 		if(validation.isPresent()) {
-			throw new LoginException("user already logged in eith this number");
+			throw new LoginException("user already logged in with this Mobile number");
 		}
 		
 		if(customer.getPassword().equals(dto.getPassword())) {
@@ -46,7 +46,7 @@ public class CustomerLoginImpl implements CustomerLogin{
 			cus.setUserId(customer.getCustomerId());
 			cus.setUuid(key);
 			cus.setLocalDateTime(LocalDateTime.now());
-			usr.save(cus);
+			userSessionRepo.save(cus);
 			return cus.toString();
 		}
 		
@@ -55,11 +55,11 @@ public class CustomerLoginImpl implements CustomerLogin{
 
 	@Override
 	public String logOutFromAccount(String key) throws LoginException {
-		List<CurrentUserSession> validation=usr.findByUuid(key);
+		List<CurrentUserSession> validation=userSessionRepo.findByUuid(key);
 		if(validation.size()==0) {
 			throw new LoginException("user not logged in with this number");
 		}
-		usr.delete(validation.get(0));
+		userSessionRepo.delete(validation.get(0));
 		return "Logged out !";
 	}
 

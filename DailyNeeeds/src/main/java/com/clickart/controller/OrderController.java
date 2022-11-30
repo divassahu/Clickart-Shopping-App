@@ -1,6 +1,6 @@
 package com.clickart.controller;
 
-import java.time.LocalDate; 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,35 +26,35 @@ import com.clickart.service.OrderService;
 public class OrderController {
 	
 	@Autowired
-	private OrderService os;
+	private OrderService orderService;
 	
 	@PostMapping("/addOrder/{cartId}")
 	public ResponseEntity<Order> addOrder(@RequestBody Order order, @PathVariable("cartId") int cartId) throws OrderException, CartException {
-		Order o=os.addOrder(order, cartId);
+		Order o=orderService.addOrder(order, cartId);
 		return new ResponseEntity<Order>(o,HttpStatus.ACCEPTED);
 	}
 
 	@GetMapping("/viewOrder/{orderId}")
 	public ResponseEntity<Order> viewOrder(@PathVariable("orderId") int orderId) throws OrderException {
-		Order o=os.viewOrder(orderId);
+		Order o=orderService.viewOrder(orderId);
 		return new ResponseEntity<Order>(o,HttpStatus.ACCEPTED);
 	}
 
 	@GetMapping("/viewOrdersByDate/{startDate}/{endDate}")
 	public ResponseEntity<List<Order>> viewOrdersByDate(@PathVariable("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @PathVariable("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws OrderException {
-		List<Order> list=os.viewOrdersByDate(startDate, endDate);
+		List<Order> list=orderService.viewOrdersByDate(startDate, endDate);
 		return new ResponseEntity<List<Order>>(list,HttpStatus.ACCEPTED);
 	}
 
 	@PutMapping("/updateOrderStatus/{orderId}/{status}")
 	public ResponseEntity<Order> updateOrderStatus(@PathVariable("orderId") int orderId, @PathVariable("status") String status) throws OrderException {
-		Order o=os.updateOrderStatus(orderId, status);
+		Order o=orderService.updateOrderStatus(orderId, status);
 		return new ResponseEntity<Order>(o,HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/deleteOrder/{orderId}")
 	public ResponseEntity<Order> deleteOrder(@PathVariable("orderId") int orderId) throws OrderException {
-		Order o=os.deleteOrder(orderId);
+		Order o=orderService.deleteOrder(orderId);
 		return new ResponseEntity<Order>(o,HttpStatus.ACCEPTED);
 	}
 

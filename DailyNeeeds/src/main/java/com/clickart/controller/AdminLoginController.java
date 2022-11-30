@@ -19,17 +19,17 @@ import com.clickart.service.AdminLogin;
 public class AdminLoginController {
 	
 	@Autowired
-	private AdminLogin al;
+	private AdminLogin adminLogin;
 	
 	@PostMapping("/login")
 	public ResponseEntity<CurrentAdminSession> adminLogin(@RequestBody Login dto) throws LoginException{
-		CurrentAdminSession res=al.adminLog(dto);
+		CurrentAdminSession res=adminLogin.adminLog(dto);
 		return new ResponseEntity<CurrentAdminSession>(res,HttpStatus.ACCEPTED);
 	}
 	
 	@PostMapping("/logout")
 	public ResponseEntity<String> adminLogout(@RequestParam(required = false)String key) throws LoginException{
-		String res=al.adminLogOut(key);
+		String res=adminLogin.adminLogOut(key);
 		return new ResponseEntity<String>(res,HttpStatus.ACCEPTED);
 	}
 

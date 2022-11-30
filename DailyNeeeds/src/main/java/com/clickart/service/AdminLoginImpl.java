@@ -1,6 +1,6 @@
 package com.clickart.service;
 
-import java.time.LocalDateTime; 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,20 +20,21 @@ import net.bytebuddy.utility.RandomString;
 public class AdminLoginImpl implements AdminLogin{
 	
 	@Autowired
-	private AdminSessionRepo asr;
+	private AdminSessionRepo adminSessionRepo;
+	
 	
 	@Autowired
-	private AdminRepo arl;
+	private AdminRepo adminRepo;
 
 	@Override
 	public CurrentAdminSession adminLog(Login dto) throws LoginException {
-		List<Admin>temp=arl.findByAdminMobile(dto.getMobile());
+		List<Admin>temp=adminRepo.findByAdminMobile(dto.getMobile());
 		if(temp.size()==0)
 			throw new LoginException("please enter valid mobile number");
 		
 		Admin admin=temp.get(0);
 		
-		Optional<CurrentAdminSession> validation=asr.findById(admin.getAdminId());
+		Optional<CurrentAdminSession> validation=adminSessionRepo.findById(admin.getAdminId());
 		if(validation.isPresent()) {
 			
 			if(admin.getAdminPassword().equals(dto.getPassword())) {
@@ -49,7 +50,7 @@ public class AdminLoginImpl implements AdminLogin{
 			cas.setLocalDateTime(LocalDateTime.now());
 			cas.setUserId(admin.getAdminId());
 			cas.setUuid(key);
-			asr.save(cas);
+			adminSessionRepo.save(cas);
 			return cas;
 		}
 		throw new LoginException("please enter valid password");
@@ -57,11 +58,11 @@ public class AdminLoginImpl implements AdminLogin{
 
 	@Override
 	public String adminLogOut(String key) throws LoginException {
-		List<CurrentAdminSession>validation=asr.findByUuid(key);
+		List<CurrentAdminSession>validation=adminSessionRepo.findByUuid(key);
 		if(validation.size()==0) {
 			throw new LoginException("user not logged in with this number");
 		}
-		asr.delete(validation.get(0));
+		adminSessionRepo.delete(validation.get(0));
 		return "Logged out !";
 	}
 

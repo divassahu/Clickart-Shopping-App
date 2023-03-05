@@ -1,2 +1,2 @@
 img# Clickart-Shopping-App
-![er](https://masai-course.s3.ap-south-1.amazonaws.com/editor/uploads/2022-11-16/Untitled_130171.png)
+![er](https://user-images.githubusercontent.com/53571060/209521400-692aa24b-e805-4641-bde5-f2d0785f5ddf.png)
